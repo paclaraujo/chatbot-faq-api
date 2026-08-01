@@ -1,20 +1,43 @@
 import { prisma } from "../../../database/prisma";
-import type { CreateFaqDTO } from "../dto/create-faq.dto";
+import type { CreateFaqDTO, UpdateFaqDTO } from "../dto/create-faq.dto";
 
-interface Faq extends CreateFaqDTO {
-  id: number;
-}
+// interface Faq extends CreateFaqDTO {
+//   id: number;
+// }
 
 export class FaqRepository {
   async findAllFaqs() {
-    const faqs = await prisma.fAQ.findMany();
+    return await prisma.fAQ.findMany();
+  }
 
-    return JSON.stringify(faqs)
+  async findById(id: number) {
+    return prisma.fAQ.findUnique({
+      where: {
+        id,
+      },
+    });
   }
   
-  create(data: CreateFaqDTO) {
-    return prisma.fAQ.create({
+  async create(data: CreateFaqDTO) {
+    return await prisma.fAQ.create({
       data
     })
+  }
+
+  async update(id: number, data: UpdateFaqDTO) {
+    return prisma.fAQ.update({
+      where: {
+        id,
+      },
+      data,
+    });
+  }
+
+  async delete(id: number) {
+    return prisma.fAQ.delete({
+      where: {
+        id,
+      },
+    });
   }
 }

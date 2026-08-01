@@ -3,3 +3,9 @@ export interface CreateFaqDTO {
   answer: string;
   category: string;
 }
+
+export interface UpdateFaqDTO {
+  question?: string;
+  answer?: string;
+  category?: string;
+}

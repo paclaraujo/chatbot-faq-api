@@ -1,4 +1,4 @@
-import type { CreateFaqDTO } from "../dto/create-faq.dto";
+import type { CreateFaqDTO, UpdateFaqDTO } from "../dto/create-faq.dto";
 import { FaqRepository } from "../repositories/faq.repository";
 
 export class FaqService {
@@ -8,11 +8,31 @@ export class FaqService {
     this.repository = repository;
   }
 
-  list() {
-    return this.repository.findAllFaqs();
+  async list() {
+    return await this.repository.findAllFaqs();
   }
 
-  create(data: CreateFaqDTO) {
-    return this.repository.create(data);
+  async create(data: CreateFaqDTO) {
+    return await this.repository.create(data);
+  }
+
+  async update(id: number, data: UpdateFaqDTO) {
+    const faq = await this.repository.findById(id);
+
+    if (!faq) {
+      throw new Error("FAQ não encontrado");
+    }
+
+    return this.repository.update(id, data);
+  }
+
+  async delete(id: number) {
+    const faq = await this.repository.findById(id);
+
+    if (!faq) {
+      throw new Error("FAQ não encontrado");
+    }
+
+    return this.repository.delete(id);
   }
 }
