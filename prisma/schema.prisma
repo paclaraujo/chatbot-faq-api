@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model FAQ {
+  id           Int           @id @default(autoincrement())
+  question     String        @unique
+  answer       String
+  category     String
+  createdAt    DateTime      @default(now())
+  interactions Interaction[]
+}
+
+model Interaction {
+  id        Int      @id @default(autoincrement())
+  question  String
+  matched   Boolean
+  createdAt DateTime @default(now())
+  faqId     Int?
+  faq       FAQ?     @relation(fields: [faqId], references: [id])
+}
