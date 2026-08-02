@@ -1,0 +1,27 @@
+{
+  "auth": null,
+  "project": {
+    "rememberedByWorkspace": {},
+    "lastResolved": null,
+    "repositoryConnectionsByProject": {}
+  },
+  "branch": {
+    "active": "preview"
+  },
+  "app": {
+    "selectedByProject": {
+      "proj_cyyeat4pwfx7aqcbxk97sabr": {
+        "id": "cps_bav9zzji5tpcq0dvosjth5h4",
+        "name": "chatbot-faq-api"
+      }
+    },
+    "knownLiveDeploymentByProject": {
+      "proj_cyyeat4pwfx7aqcbxk97sabr": {
+        "cps_bav9zzji5tpcq0dvosjth5h4": "cpv_ltj6hual32gaz1wgv78eahq8"
+      }
+    }
+  },
+  "agent": {
+    "setupPromptDismissedAt": null
+  }
+}
