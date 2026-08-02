@@ -11,7 +11,7 @@ export class ChatController {
       const { question } = req.body;
 
       if (!question || !question.trim()) {
-        throw new Error("Question is required");
+        throw new Error("Pergunta é obrigatória");
       }
 
       const result = await service.ask({ question });
