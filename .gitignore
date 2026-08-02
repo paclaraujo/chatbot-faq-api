@@ -33,6 +33,9 @@ prisma/dev.db-journal
 # Docker
 .docker/
 
+# Prisma Compute local state
+.prisma/
+
 # IDEs
 .vscode/
 .idea/
