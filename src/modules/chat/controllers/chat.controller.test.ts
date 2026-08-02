@@ -21,7 +21,7 @@ describe("ChatController", () => {
   });
 
   describe("ask", () => {
-    it("retorna 400 quando a pergunta não é informada", async () => {
+    it("returns 400 when the question is missing", async () => {
       const res = mockResponse();
 
       await ChatController.ask(mockRequest({ body: { question: "   " } }), res);
@@ -30,7 +30,7 @@ describe("ChatController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "Pergunta é obrigatória" });
     });
 
-    it("retorna 200 com a resposta encontrada", async () => {
+    it("returns 200 with the matched answer", async () => {
       mockRepo.findSimilarFaq.mockResolvedValue({
         id: 1,
         question: "Q1",
@@ -48,7 +48,7 @@ describe("ChatController", () => {
       );
     });
 
-    it("retorna 400 quando o serviço falha", async () => {
+    it("returns 400 when the service fails", async () => {
       mockRepo.findSimilarFaq.mockRejectedValue(new Error("falha no banco"));
       const res = mockResponse();
 
@@ -60,7 +60,7 @@ describe("ChatController", () => {
   });
 
   describe("history", () => {
-    it("retorna 200 com o histórico", async () => {
+    it("returns 200 with the history", async () => {
       const history = [{ id: 1, question: "Q1" }];
       mockRepo.findHistory.mockResolvedValue(history);
       const res = mockResponse();
@@ -71,7 +71,7 @@ describe("ChatController", () => {
       expect(res.json).toHaveBeenCalledWith(history);
     });
 
-    it("retorna 400 quando o repositório falha", async () => {
+    it("returns 400 when the repository fails", async () => {
       mockRepo.findHistory.mockRejectedValue(new Error("falha no banco"));
       const res = mockResponse();
 

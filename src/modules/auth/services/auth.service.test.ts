@@ -19,7 +19,7 @@ describe("AuthService", () => {
     service = new AuthService(repository);
   });
 
-  it("lança erro quando o usuário não existe", async () => {
+  it("throws an error when the user does not exist", async () => {
     vi.mocked(repository.findByEmail).mockResolvedValue(null);
 
     await expect(
@@ -27,7 +27,7 @@ describe("AuthService", () => {
     ).rejects.toThrow("Credenciais inválidas");
   });
 
-  it("lança erro quando a senha está incorreta", async () => {
+  it("throws an error when the password is incorrect", async () => {
     const hashed = bcrypt.hashSync("senha-correta", 4);
     vi.mocked(repository.findByEmail).mockResolvedValue({
       id: 1,
@@ -41,7 +41,7 @@ describe("AuthService", () => {
     ).rejects.toThrow("Credenciais inválidas");
   });
 
-  it("retorna um token válido quando as credenciais estão corretas", async () => {
+  it("returns a valid token when the credentials are correct", async () => {
     const hashed = bcrypt.hashSync("senha-correta", 4);
     vi.mocked(repository.findByEmail).mockResolvedValue({
       id: 1,

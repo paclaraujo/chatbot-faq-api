@@ -27,7 +27,7 @@ describe("AnalyticsController", () => {
     mockRepo.timeline.mockResolvedValue([]);
   });
 
-  it("retorna 200 com o dashboard convertendo os parâmetros de query para número", async () => {
+  it("returns 200 with the dashboard, converting query params to numbers", async () => {
     const res = mockResponse();
 
     await AnalyticsController.dashboard(
@@ -41,7 +41,7 @@ describe("AnalyticsController", () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it("usa os valores padrão quando a query não informa limites", async () => {
+  it("uses default values when the query does not provide limits", async () => {
     const res = mockResponse();
 
     await AnalyticsController.dashboard(mockRequest({ query: {} }), res);
@@ -50,7 +50,7 @@ describe("AnalyticsController", () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it("retorna 400 quando o repositório falha", async () => {
+  it("returns 400 when the repository fails", async () => {
     mockRepo.countByMatched.mockRejectedValue(new Error("falha no banco"));
     const res = mockResponse();
 

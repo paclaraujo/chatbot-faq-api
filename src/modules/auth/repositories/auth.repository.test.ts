@@ -20,7 +20,7 @@ describe("AuthRepository", () => {
     repository = new AuthRepository();
   });
 
-  it("findByEmail busca o usuário pelo e-mail", async () => {
+  it("findByEmail looks up the user by e-mail", async () => {
     const user = { id: 1, email: "user@teste.com", password: "hash", createdAt: new Date() };
     mockPrisma.user.findUnique.mockResolvedValue(user);
 

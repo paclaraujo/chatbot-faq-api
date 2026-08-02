@@ -24,7 +24,7 @@ describe("FaqRepository", () => {
     repository = new FaqRepository();
   });
 
-  it("findAllFaqs busca todas as FAQs", async () => {
+  it("findAllFaqs fetches all FAQs", async () => {
     const faqs = [{ id: 1 }];
     mockPrisma.fAQ.findMany.mockResolvedValue(faqs);
 
@@ -34,7 +34,7 @@ describe("FaqRepository", () => {
     expect(result).toBe(faqs);
   });
 
-  it("findById busca pelo id", async () => {
+  it("findById fetches by id", async () => {
     const faq = { id: 1 };
     mockPrisma.fAQ.findUnique.mockResolvedValue(faq);
 
@@ -44,7 +44,7 @@ describe("FaqRepository", () => {
     expect(result).toBe(faq);
   });
 
-  it("findByQuestion busca pela pergunta", async () => {
+  it("findByQuestion fetches by question", async () => {
     const faq = { id: 1, question: "Q1" };
     mockPrisma.fAQ.findUnique.mockResolvedValue(faq);
 
@@ -54,7 +54,7 @@ describe("FaqRepository", () => {
     expect(result).toBe(faq);
   });
 
-  it("create cria uma FAQ", async () => {
+  it("create creates a FAQ", async () => {
     const data = { question: "Q1", answer: "A1", category: "geral" };
     const created = { id: 1, ...data };
     mockPrisma.fAQ.create.mockResolvedValue(created);
@@ -65,7 +65,7 @@ describe("FaqRepository", () => {
     expect(result).toBe(created);
   });
 
-  it("update atualiza uma FAQ", async () => {
+  it("update updates a FAQ", async () => {
     const data = { answer: "Nova resposta" };
     const updated = { id: 1, question: "Q1", answer: "Nova resposta", category: "geral" };
     mockPrisma.fAQ.update.mockResolvedValue(updated);
@@ -76,7 +76,7 @@ describe("FaqRepository", () => {
     expect(result).toBe(updated);
   });
 
-  it("delete remove uma FAQ", async () => {
+  it("delete removes a FAQ", async () => {
     const deleted = { id: 1, question: "Q1", answer: "A1", category: "geral" };
     mockPrisma.fAQ.delete.mockResolvedValue(deleted);
 
