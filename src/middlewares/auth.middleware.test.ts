@@ -4,7 +4,7 @@ import { authMiddleware } from "./auth.middleware";
 import { mockRequest, mockResponse } from "../test-utils/http";
 
 describe("authMiddleware", () => {
-  it("retorna 401 quando o header Authorization não é informado", () => {
+  it("returns 401 when the Authorization header is missing", () => {
     const req = mockRequest({ headers: {} });
     const res = mockResponse();
     const next = vi.fn();
@@ -16,7 +16,7 @@ describe("authMiddleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("retorna 401 quando o header não usa o esquema Bearer", () => {
+  it("returns 401 when the header does not use the Bearer scheme", () => {
     const req = mockRequest({ headers: { authorization: "Basic abc" } });
     const res = mockResponse();
     const next = vi.fn();
@@ -28,7 +28,7 @@ describe("authMiddleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("retorna 401 quando o token é inválido", () => {
+  it("returns 401 when the token is invalid", () => {
     const req = mockRequest({ headers: { authorization: "Bearer token-invalido" } });
     const res = mockResponse();
     const next = vi.fn();
@@ -40,7 +40,7 @@ describe("authMiddleware", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("chama next() e popula req.user quando o token é válido", () => {
+  it("calls next() and populates req.user when the token is valid", () => {
     const token = jwt.sign({ sub: 1, email: "user@teste.com" }, process.env.JWT_SECRET as string);
     const req = mockRequest({ headers: { authorization: `Bearer ${token}` } });
     const res = mockResponse();

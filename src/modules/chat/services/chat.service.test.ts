@@ -20,7 +20,7 @@ describe("ChatService", () => {
   });
 
   describe("ask", () => {
-    it("retorna a resposta correspondente e registra a interação como match", async () => {
+    it("returns the matching answer and records the interaction as a match", async () => {
       const match = { id: 1, question: "Como funciona?", answer: "Assim.", category: "geral" };
       vi.mocked(repository.findSimilarFaq).mockResolvedValue(match);
       vi.mocked(repository.createInteraction).mockResolvedValue({} as never);
@@ -39,7 +39,7 @@ describe("ChatService", () => {
       });
     });
 
-    it("retorna mensagem padrão e registra sem match quando não encontra FAQ similar", async () => {
+    it("returns the default message and records no match when no similar FAQ is found", async () => {
       vi.mocked(repository.findSimilarFaq).mockResolvedValue(null as never);
       vi.mocked(repository.createInteraction).mockResolvedValue({} as never);
 
@@ -60,7 +60,7 @@ describe("ChatService", () => {
   });
 
   describe("history", () => {
-    it("retorna o histórico do repositório", async () => {
+    it("returns the history from the repository", async () => {
       const history = [{ id: 1, question: "Q", matched: true }];
       vi.mocked(repository.findHistory).mockResolvedValue(history as never);
 

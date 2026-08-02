@@ -24,7 +24,7 @@ describe("AnalyticsRepository", () => {
     repository = new AnalyticsRepository();
   });
 
-  it("countByMatched agrupa interações por status de match", async () => {
+  it("countByMatched groups interactions by match status", async () => {
     const grouped = [
       { matched: true, _count: 3 },
       { matched: false, _count: 1 },
@@ -40,7 +40,7 @@ describe("AnalyticsRepository", () => {
     expect(result).toBe(grouped);
   });
 
-  it("topFaqs ordena por contagem, aplica o limite e junta os dados da FAQ", async () => {
+  it("topFaqs sorts by count, applies the limit and joins the FAQ data", async () => {
     mockPrisma.interaction.groupBy.mockResolvedValue([
       { faqId: 1, _count: 2 },
       { faqId: 2, _count: 5 },
@@ -59,7 +59,7 @@ describe("AnalyticsRepository", () => {
     ]);
   });
 
-  it("topFaqs preenche pergunta/categoria vazias quando a FAQ não é encontrada", async () => {
+  it("topFaqs fills question/category as empty when the FAQ is not found", async () => {
     mockPrisma.interaction.groupBy.mockResolvedValue([{ faqId: 99, _count: 1 }]);
     mockPrisma.fAQ.findMany.mockResolvedValue([]);
 
@@ -68,7 +68,7 @@ describe("AnalyticsRepository", () => {
     expect(result).toEqual([{ faqId: 99, question: "", category: "", count: 1 }]);
   });
 
-  it("unansweredQuestions executa a query raw e retorna o resultado", async () => {
+  it("unansweredQuestions runs the raw query and returns the result", async () => {
     const rows = [{ question: "não sei", count: 2, lastAskedAt: new Date() }];
     mockPrisma.$queryRaw.mockResolvedValue(rows);
 
@@ -78,7 +78,7 @@ describe("AnalyticsRepository", () => {
     expect(result).toBe(rows);
   });
 
-  it("distributionByCategory executa a query raw e retorna o resultado", async () => {
+  it("distributionByCategory runs the raw query and returns the result", async () => {
     const rows = [{ category: "geral", count: 4 }];
     mockPrisma.$queryRaw.mockResolvedValue(rows);
 
@@ -88,7 +88,7 @@ describe("AnalyticsRepository", () => {
     expect(result).toBe(rows);
   });
 
-  it("timeline executa a query raw e retorna o resultado", async () => {
+  it("timeline runs the raw query and returns the result", async () => {
     const rows = [{ date: new Date(), count: 3 }];
     mockPrisma.$queryRaw.mockResolvedValue(rows);
 

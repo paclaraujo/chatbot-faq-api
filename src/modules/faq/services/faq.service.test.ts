@@ -23,7 +23,7 @@ describe("FaqService", () => {
   });
 
   describe("list", () => {
-    it("retorna todas as FAQs do repositório", async () => {
+    it("returns all FAQs from the repository", async () => {
       const faqs = [{ id: 1, question: "Q1", answer: "A1", category: "geral" }];
       vi.mocked(repository.findAllFaqs).mockResolvedValue(faqs as never);
 
@@ -35,7 +35,7 @@ describe("FaqService", () => {
   });
 
   describe("create", () => {
-    it("cria a FAQ quando não existe pergunta igual", async () => {
+    it("creates the FAQ when no identical question exists", async () => {
       vi.mocked(repository.findByQuestion).mockResolvedValue(null);
       const created = { id: 1, question: "Nova pergunta", answer: "R", category: "geral" };
       vi.mocked(repository.create).mockResolvedValue(created as never);
@@ -48,7 +48,7 @@ describe("FaqService", () => {
       expect(result).toBe(created);
     });
 
-    it("lança erro ao tentar criar pergunta duplicada", async () => {
+    it("throws an error when trying to create a duplicate question", async () => {
       vi.mocked(repository.findByQuestion).mockResolvedValue({
         id: 1,
         question: "Já existe",
@@ -65,7 +65,7 @@ describe("FaqService", () => {
   });
 
   describe("update", () => {
-    it("lança erro quando a FAQ não existe", async () => {
+    it("throws an error when the FAQ does not exist", async () => {
       vi.mocked(repository.findById).mockResolvedValue(null);
 
       await expect(service.update(999, { answer: "novo" })).rejects.toThrow(
@@ -75,7 +75,7 @@ describe("FaqService", () => {
       expect(repository.update).not.toHaveBeenCalled();
     });
 
-    it("atualiza a FAQ quando nenhuma pergunta é enviada", async () => {
+    it("updates the FAQ when no question is sent", async () => {
       const existing = { id: 1, question: "Q1", answer: "A1", category: "geral" };
       vi.mocked(repository.findById).mockResolvedValue(existing as never);
       vi.mocked(repository.update).mockResolvedValue({ ...existing, answer: "A2" } as never);
@@ -87,7 +87,7 @@ describe("FaqService", () => {
       expect(result).toEqual({ ...existing, answer: "A2" });
     });
 
-    it("atualiza a FAQ quando a pergunta enviada é a mesma do próprio registro", async () => {
+    it("updates the FAQ when the sent question is the same as its own record", async () => {
       const existing = { id: 1, question: "Q1", answer: "A1", category: "geral" };
       vi.mocked(repository.findById).mockResolvedValue(existing as never);
       vi.mocked(repository.findByQuestion).mockResolvedValue(existing as never);
@@ -98,7 +98,7 @@ describe("FaqService", () => {
       expect(repository.update).toHaveBeenCalledWith(1, { question: "Q1" });
     });
 
-    it("lança erro ao atualizar para uma pergunta que já pertence a outra FAQ", async () => {
+    it("throws an error when updating to a question that already belongs to another FAQ", async () => {
       const existing = { id: 1, question: "Q1", answer: "A1", category: "geral" };
       const other = { id: 2, question: "Q2", answer: "A2", category: "geral" };
       vi.mocked(repository.findById).mockResolvedValue(existing as never);
@@ -113,14 +113,14 @@ describe("FaqService", () => {
   });
 
   describe("delete", () => {
-    it("lança erro quando a FAQ não existe", async () => {
+    it("throws an error when the FAQ does not exist", async () => {
       vi.mocked(repository.findById).mockResolvedValue(null);
 
       await expect(service.delete(999)).rejects.toThrow("FAQ não encontrado");
       expect(repository.delete).not.toHaveBeenCalled();
     });
 
-    it("remove a FAQ quando ela existe", async () => {
+    it("removes the FAQ when it exists", async () => {
       const existing = { id: 1, question: "Q1", answer: "A1", category: "geral" };
       vi.mocked(repository.findById).mockResolvedValue(existing as never);
       vi.mocked(repository.delete).mockResolvedValue(existing as never);

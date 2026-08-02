@@ -29,7 +29,7 @@ describe("AnalyticsService", () => {
     vi.mocked(repository.timeline).mockResolvedValue([]);
   });
 
-  it("usa os limites informados na query", async () => {
+  it("uses the limits provided in the query", async () => {
     await service.dashboard({ topLimit: 3, unansweredLimit: 7, timelineDays: 10 });
 
     expect(repository.topFaqs).toHaveBeenCalledWith(3);
@@ -37,7 +37,7 @@ describe("AnalyticsService", () => {
     expect(repository.timeline).toHaveBeenCalledWith(10);
   });
 
-  it("usa os valores padrão quando nenhum limite é informado", async () => {
+  it("uses default values when no limit is provided", async () => {
     await service.dashboard({});
 
     expect(repository.topFaqs).toHaveBeenCalledWith(5);
@@ -45,7 +45,7 @@ describe("AnalyticsService", () => {
     expect(repository.timeline).toHaveBeenCalledWith(30);
   });
 
-  it("calcula o total de interações e a taxa de match", async () => {
+  it("calculates the total interactions and the match rate", async () => {
     const result = await service.dashboard({});
 
     expect(result.totalInteractions).toBe(10);
@@ -54,7 +54,7 @@ describe("AnalyticsService", () => {
     expect(result.matchRate).toBe(0.6);
   });
 
-  it("retorna matchRate 0 quando não há interações", async () => {
+  it("returns matchRate 0 when there are no interactions", async () => {
     vi.mocked(repository.countByMatched).mockResolvedValue([]);
 
     const result = await service.dashboard({});

@@ -24,7 +24,7 @@ describe("FaqController", () => {
   });
 
   describe("list", () => {
-    it("retorna 200 com a lista de FAQs", async () => {
+    it("returns 200 with the list of FAQs", async () => {
       const faqs = [{ id: 1, question: "Q1", answer: "A1", category: "geral" }];
       mockRepo.findAllFaqs.mockResolvedValue(faqs);
       const res = mockResponse();
@@ -35,7 +35,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith(faqs);
     });
 
-    it("retorna 400 quando o repositório falha", async () => {
+    it("returns 400 when the repository fails", async () => {
       mockRepo.findAllFaqs.mockRejectedValue(new Error("falha no banco"));
       const res = mockResponse();
 
@@ -47,7 +47,7 @@ describe("FaqController", () => {
   });
 
   describe("create", () => {
-    it("retorna 400 quando a pergunta não é informada", async () => {
+    it("returns 400 when the question is missing", async () => {
       const res = mockResponse();
 
       await FaqController.create(
@@ -59,7 +59,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "Pergunta é obrigatória" });
     });
 
-    it("retorna 400 quando a resposta não é informada", async () => {
+    it("returns 400 when the answer is missing", async () => {
       const res = mockResponse();
 
       await FaqController.create(
@@ -70,7 +70,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "Resposta é obrigatória" });
     });
 
-    it("retorna 400 quando a categoria não é informada", async () => {
+    it("returns 400 when the category is missing", async () => {
       const res = mockResponse();
 
       await FaqController.create(
@@ -81,7 +81,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "Categoria é obrigatória" });
     });
 
-    it("retorna 400 quando já existe pergunta igual", async () => {
+    it("returns 400 when an identical question already exists", async () => {
       mockRepo.findByQuestion.mockResolvedValue({ id: 1, question: "Q" });
       const res = mockResponse();
 
@@ -96,7 +96,7 @@ describe("FaqController", () => {
       });
     });
 
-    it("cria a FAQ e retorna 201", async () => {
+    it("creates the FAQ and returns 201", async () => {
       mockRepo.findByQuestion.mockResolvedValue(null);
       const created = { id: 1, question: "Q", answer: "A", category: "C" };
       mockRepo.create.mockResolvedValue(created);
@@ -113,7 +113,7 @@ describe("FaqController", () => {
   });
 
   describe("update", () => {
-    it("retorna 400 quando a FAQ não existe", async () => {
+    it("returns 400 when the FAQ does not exist", async () => {
       mockRepo.findById.mockResolvedValue(null);
       const res = mockResponse();
 
@@ -126,7 +126,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "FAQ não encontrado" });
     });
 
-    it("retorna 400 quando a nova pergunta já pertence a outra FAQ", async () => {
+    it("returns 400 when the new question already belongs to another FAQ", async () => {
       mockRepo.findById.mockResolvedValue({ id: 1, question: "Q1" });
       mockRepo.findByQuestion.mockResolvedValue({ id: 2, question: "Q2" });
       const res = mockResponse();
@@ -142,7 +142,7 @@ describe("FaqController", () => {
       });
     });
 
-    it("atualiza a FAQ e retorna 200", async () => {
+    it("updates the FAQ and returns 200", async () => {
       mockRepo.findById.mockResolvedValue({ id: 1, question: "Q1" });
       const updated = { id: 1, question: "Q1", answer: "Nova", category: "C" };
       mockRepo.update.mockResolvedValue(updated);
@@ -159,7 +159,7 @@ describe("FaqController", () => {
   });
 
   describe("delete", () => {
-    it("retorna 400 quando a FAQ não existe", async () => {
+    it("returns 400 when the FAQ does not exist", async () => {
       mockRepo.findById.mockResolvedValue(null);
       const res = mockResponse();
 
@@ -169,7 +169,7 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith({ message: "FAQ não encontrado" });
     });
 
-    it("remove a FAQ e retorna 204", async () => {
+    it("removes the FAQ and returns 204", async () => {
       mockRepo.findById.mockResolvedValue({ id: 1, question: "Q1" });
       mockRepo.delete.mockResolvedValue({ id: 1 });
       const res = mockResponse();

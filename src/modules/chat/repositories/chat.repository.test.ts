@@ -23,7 +23,7 @@ describe("ChatRepository", () => {
   });
 
   describe("findSimilarFaq", () => {
-    it("retorna a FAQ mais similar quando encontrada", async () => {
+    it("returns the most similar FAQ when found", async () => {
       const match = { id: 1, question: "Q1", answer: "A1", category: "geral" };
       mockPrisma.$queryRaw.mockResolvedValue([match]);
 
@@ -32,7 +32,7 @@ describe("ChatRepository", () => {
       expect(result).toEqual(match);
     });
 
-    it("retorna null quando nenhuma FAQ similar é encontrada", async () => {
+    it("returns null when no similar FAQ is found", async () => {
       mockPrisma.$queryRaw.mockResolvedValue([]);
 
       const result = await repository.findSimilarFaq("desconhecida");
@@ -41,7 +41,7 @@ describe("ChatRepository", () => {
     });
   });
 
-  it("createInteraction cria uma interação", async () => {
+  it("createInteraction creates an interaction", async () => {
     const data = { question: "Q1", matched: true, faqId: 1 };
     const created = { id: 1, ...data };
     mockPrisma.interaction.create.mockResolvedValue(created);
@@ -52,7 +52,7 @@ describe("ChatRepository", () => {
     expect(result).toBe(created);
   });
 
-  it("findHistory busca o histórico ordenado com a FAQ associada", async () => {
+  it("findHistory fetches the ordered history with the associated FAQ", async () => {
     const history = [{ id: 1, question: "Q1", matched: true, faq: null }];
     mockPrisma.interaction.findMany.mockResolvedValue(history);
 
