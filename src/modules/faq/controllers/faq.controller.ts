@@ -23,15 +23,15 @@ export class FaqController {
     const data = req.body 
       
     if (!data.question || !data.question.trim()) {
-      throw new Error("Question is required");
+      throw new Error("Pergunta é obrigatória");
     }
 
     if (!data.answer || !data.answer.trim()) {
-      throw new Error("Answer is required");
+      throw new Error("Resposta é obrigatória");
     }
 
     if (!data.category || !data.category.trim()) {
-      throw new Error("Category is required");
+      throw new Error("Categoria é obrigatória");
     }
       const faq = await service.create(data);
 
@@ -44,14 +44,17 @@ export class FaqController {
   }
 
   static async update(req: Request, res: Response) {
-    const { id } = req.params;
+    try {
+      const { id } = req.params;
 
-    const faq = await service.update(
-      +id,
-      req.body
-    );
+      const faq = await service.update(+id, req.body);
 
-    return res.status(200).json(faq);
+      return res.status(200).json(faq);
+    } catch (error) {
+      return res.status(400).json({
+        message: (error as Error).message,
+      });
+    }
   }
 
   static async delete(req: Request, res: Response) {
