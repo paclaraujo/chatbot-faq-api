@@ -17,7 +17,16 @@ export class FaqRepository {
       },
     });
   }
-  
+
+  async findByQuestion(question: string) {
+    return prisma.fAQ.findUnique({
+      where: {
+        question,
+      },
+    });
+  }
+
+
   async create(data: CreateFaqDTO) {
     return await prisma.fAQ.create({
       data

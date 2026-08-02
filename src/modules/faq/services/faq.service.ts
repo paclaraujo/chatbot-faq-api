@@ -13,6 +13,12 @@ export class FaqService {
   }
 
   async create(data: CreateFaqDTO) {
+    const existing = await this.repository.findByQuestion(data.question);
+
+    if (existing) {
+      throw new Error("Já existe uma pergunta cadastrada com esse mesmo texto");
+    }
+
     return await this.repository.create(data);
   }
 
@@ -21,6 +27,14 @@ export class FaqService {
 
     if (!faq) {
       throw new Error("FAQ não encontrado");
+    }
+
+    if (data.question) {
+      const existing = await this.repository.findByQuestion(data.question);
+
+      if (existing && existing.id !== id) {
+        throw new Error("Já existe uma pergunta cadastrada com esse mesmo texto");
+      }
     }
 
     return this.repository.update(id, data);
