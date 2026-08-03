@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { LoginDTO } from "../dto/login.dto";
 import { AuthRepository } from "../repositories/auth.repository";
+import { UnauthorizedError } from "../../../shared/errors";
 
 export class AuthService {
   private repository: AuthRepository;
@@ -14,13 +15,13 @@ export class AuthService {
     const user = await this.repository.findByEmail(data.email);
 
     if (!user) {
-      throw new Error("Credenciais inválidas");
+      throw new UnauthorizedError("Credenciais inválidas");
     }
 
     const passwordMatches = await bcrypt.compare(data.password, user.password);
 
     if (!passwordMatches) {
-      throw new Error("Credenciais inválidas");
+      throw new UnauthorizedError("Credenciais inválidas");
     }
 
     const expiresIn = (process.env.JWT_EXPIRES_IN ||

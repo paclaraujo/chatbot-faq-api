@@ -1,28 +1,15 @@
 import type { Request, Response } from "express";
 import { AuthRepository } from "../repositories/auth.repository";
 import { AuthService } from "../services/auth.service";
+import type { LoginDTO } from "../dto/login.dto";
 
 const repository = new AuthRepository();
 const service = new AuthService(repository);
 
 export class AuthController {
   static async login(req: Request, res: Response) {
-    const { email, password } = req.body;
+    const result = await service.login(req.body as LoginDTO);
 
-    if (!email || !password) {
-      return res.status(400).json({
-        message: "Email e senha são obrigatórios",
-      });
-    }
-
-    try {
-      const result = await service.login({ email, password });
-
-      return res.status(200).json(result);
-    } catch (error) {
-      return res.status(401).json({
-        message: (error as Error).message,
-      });
-    }
+    return res.status(200).json(result);
   }
 }
