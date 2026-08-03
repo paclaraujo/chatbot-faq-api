@@ -1,5 +1,6 @@
 import type { CreateFaqDTO, UpdateFaqDTO } from "../dto/create-faq.dto";
 import { FaqRepository } from "../repositories/faq.repository";
+import { ConflictError, NotFoundError } from "../../../shared/errors";
 
 export class FaqService {
   private repository: FaqRepository;
@@ -16,7 +17,7 @@ export class FaqService {
     const existing = await this.repository.findByQuestion(data.question);
 
     if (existing) {
-      throw new Error("Já existe uma pergunta cadastrada com esse mesmo texto");
+      throw new ConflictError("Já existe uma pergunta cadastrada com esse mesmo texto");
     }
 
     return await this.repository.create(data);
@@ -26,14 +27,14 @@ export class FaqService {
     const faq = await this.repository.findById(id);
 
     if (!faq) {
-      throw new Error("FAQ não encontrado");
+      throw new NotFoundError("FAQ não encontrado");
     }
 
     if (data.question) {
       const existing = await this.repository.findByQuestion(data.question);
 
       if (existing && existing.id !== id) {
-        throw new Error("Já existe uma pergunta cadastrada com esse mesmo texto");
+        throw new ConflictError("Já existe uma pergunta cadastrada com esse mesmo texto");
       }
     }
 
@@ -44,7 +45,7 @@ export class FaqService {
     const faq = await this.repository.findById(id);
 
     if (!faq) {
-      throw new Error("FAQ não encontrado");
+      throw new NotFoundError("FAQ não encontrado");
     }
 
     return this.repository.delete(id);

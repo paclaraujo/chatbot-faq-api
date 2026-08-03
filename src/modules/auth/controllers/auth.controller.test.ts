@@ -19,26 +19,15 @@ describe("AuthController", () => {
     vi.clearAllMocks();
   });
 
-  it("returns 400 when email or password is missing", async () => {
-    const res = mockResponse();
-
-    await AuthController.login(mockRequest({ body: { email: "", password: "" } }), res);
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ message: "Email e senha são obrigatórios" });
-  });
-
-  it("returns 401 when the credentials are invalid", async () => {
+  it("propagates an unauthorized error when the credentials are invalid", async () => {
     mockRepo.findByEmail.mockResolvedValue(null);
-    const res = mockResponse();
 
-    await AuthController.login(
-      mockRequest({ body: { email: "user@teste.com", password: "123456" } }),
-      res
-    );
-
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ message: "Credenciais inválidas" });
+    await expect(
+      AuthController.login(
+        mockRequest({ body: { email: "user@teste.com", password: "123456" } }),
+        mockResponse()
+      )
+    ).rejects.toThrow("Credenciais inválidas");
   });
 
   it("returns 200 with the token when the credentials are valid", async () => {

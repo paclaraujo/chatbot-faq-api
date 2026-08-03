@@ -50,13 +50,11 @@ describe("AnalyticsController", () => {
     expect(res.status).toHaveBeenCalledWith(200);
   });
 
-  it("returns 400 when the repository fails", async () => {
+  it("propagates errors from the repository", async () => {
     mockRepo.countByMatched.mockRejectedValue(new Error("falha no banco"));
-    const res = mockResponse();
 
-    await AnalyticsController.dashboard(mockRequest({ query: {} }), res);
-
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ message: "falha no banco" });
+    await expect(
+      AnalyticsController.dashboard(mockRequest({ query: {} }), mockResponse())
+    ).rejects.toThrow("falha no banco");
   });
 });

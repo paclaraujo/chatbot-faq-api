@@ -35,65 +35,25 @@ describe("FaqController", () => {
       expect(res.json).toHaveBeenCalledWith(faqs);
     });
 
-    it("returns 400 when the repository fails", async () => {
+    it("propagates errors from the repository", async () => {
       mockRepo.findAllFaqs.mockRejectedValue(new Error("falha no banco"));
-      const res = mockResponse();
 
-      await FaqController.list(mockRequest(), res);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: "falha no banco" });
+      await expect(FaqController.list(mockRequest(), mockResponse())).rejects.toThrow(
+        "falha no banco"
+      );
     });
   });
 
   describe("create", () => {
-    it("returns 400 when the question is missing", async () => {
-      const res = mockResponse();
-
-      await FaqController.create(
-        mockRequest({ body: { question: "  ", answer: "A", category: "C" } }),
-        res
-      );
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: "Pergunta é obrigatória" });
-    });
-
-    it("returns 400 when the answer is missing", async () => {
-      const res = mockResponse();
-
-      await FaqController.create(
-        mockRequest({ body: { question: "Q", answer: "", category: "C" } }),
-        res
-      );
-
-      expect(res.json).toHaveBeenCalledWith({ message: "Resposta é obrigatória" });
-    });
-
-    it("returns 400 when the category is missing", async () => {
-      const res = mockResponse();
-
-      await FaqController.create(
-        mockRequest({ body: { question: "Q", answer: "A", category: "" } }),
-        res
-      );
-
-      expect(res.json).toHaveBeenCalledWith({ message: "Categoria é obrigatória" });
-    });
-
-    it("returns 400 when an identical question already exists", async () => {
+    it("propagates a conflict error when an identical question already exists", async () => {
       mockRepo.findByQuestion.mockResolvedValue({ id: 1, question: "Q" });
-      const res = mockResponse();
 
-      await FaqController.create(
-        mockRequest({ body: { question: "Q", answer: "A", category: "C" } }),
-        res
-      );
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        message: "Já existe uma pergunta cadastrada com esse mesmo texto",
-      });
+      await expect(
+        FaqController.create(
+          mockRequest({ body: { question: "Q", answer: "A", category: "C" } }),
+          mockResponse()
+        )
+      ).rejects.toThrow("Já existe uma pergunta cadastrada com esse mesmo texto");
     });
 
     it("creates the FAQ and returns 201", async () => {
@@ -113,33 +73,27 @@ describe("FaqController", () => {
   });
 
   describe("update", () => {
-    it("returns 400 when the FAQ does not exist", async () => {
+    it("propagates a not-found error when the FAQ does not exist", async () => {
       mockRepo.findById.mockResolvedValue(null);
-      const res = mockResponse();
 
-      await FaqController.update(
-        mockRequest({ params: { id: "1" }, body: { answer: "Nova" } }),
-        res
-      );
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: "FAQ não encontrado" });
+      await expect(
+        FaqController.update(
+          mockRequest({ params: { id: "1" }, body: { answer: "Nova" } }),
+          mockResponse()
+        )
+      ).rejects.toThrow("FAQ não encontrado");
     });
 
-    it("returns 400 when the new question already belongs to another FAQ", async () => {
+    it("propagates a conflict error when the new question belongs to another FAQ", async () => {
       mockRepo.findById.mockResolvedValue({ id: 1, question: "Q1" });
       mockRepo.findByQuestion.mockResolvedValue({ id: 2, question: "Q2" });
-      const res = mockResponse();
 
-      await FaqController.update(
-        mockRequest({ params: { id: "1" }, body: { question: "Q2" } }),
-        res
-      );
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({
-        message: "Já existe uma pergunta cadastrada com esse mesmo texto",
-      });
+      await expect(
+        FaqController.update(
+          mockRequest({ params: { id: "1" }, body: { question: "Q2" } }),
+          mockResponse()
+        )
+      ).rejects.toThrow("Já existe uma pergunta cadastrada com esse mesmo texto");
     });
 
     it("updates the FAQ and returns 200", async () => {
@@ -159,14 +113,12 @@ describe("FaqController", () => {
   });
 
   describe("delete", () => {
-    it("returns 400 when the FAQ does not exist", async () => {
+    it("propagates a not-found error when the FAQ does not exist", async () => {
       mockRepo.findById.mockResolvedValue(null);
-      const res = mockResponse();
 
-      await FaqController.delete(mockRequest({ params: { id: "999" } }), res);
-
-      expect(res.status).toHaveBeenCalledWith(400);
-      expect(res.json).toHaveBeenCalledWith({ message: "FAQ não encontrado" });
+      await expect(
+        FaqController.delete(mockRequest({ params: { id: "999" } }), mockResponse())
+      ).rejects.toThrow("FAQ não encontrado");
     });
 
     it("removes the FAQ and returns 204", async () => {

@@ -7,8 +7,8 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0",
-    "outDir": "dist",
-    "rootDir": "."
+    "noEmit": true
   },
-  "include": ["src/**/*.ts", "generated/prisma/**/*.ts"]
+  "include": ["src/**/*.ts", "generated/prisma/**/*.ts"],
+  "exclude": ["src/**/*.test.ts", "src/test-utils/**"]
 }

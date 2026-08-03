@@ -36,11 +36,31 @@ Database access is centralized through Prisma, with the schema defined in [`pris
 
 ## Requirements
 
-- [Node.js](https://nodejs.org/) 20+
-- [PostgreSQL](https://www.postgresql.org/) database (a connection string is enough — see [Prisma Postgres](https://www.prisma.io/postgres) for a free hosted option)
-- npm
+Either:
+
+- [Docker](https://www.docker.com/) and Docker Compose, **or**
+- [Node.js](https://nodejs.org/) 20+, npm, and a [PostgreSQL](https://www.postgresql.org/) database (a connection string is enough — see [Prisma Postgres](https://www.prisma.io/postgres) for a free hosted option)
 
 ## Getting started
+
+### Option A — Docker (recommended)
+
+1. Create a `.env` file in the project root (see variables below — for the Docker setup, `DATABASE_URL` is overridden automatically to point at the `postgres` service, so any value works there).
+2. Start everything (Postgres, migrations, and the API):
+
+   ```bash
+   docker compose up --build
+   ```
+
+   This starts Postgres, waits for it to be healthy, runs `prisma migrate deploy` via the one-off `migrate` service, and then starts the API on `http://localhost:3001`.
+
+3. (Optional) Seed the admin user:
+
+   ```bash
+   docker compose run --rm migrate npx tsx prisma/seed.ts
+   ```
+
+### Option B — Local Node.js
 
 1. **Install dependencies**
 
@@ -90,8 +110,8 @@ Database access is centralized through Prisma, with the schema defined in [`pris
 | Script                 | Description                                   |
 | ----------------------- | ---------------------------------------------- |
 | `npm run dev`            | Start the server in watch mode (`tsx`)         |
-| `npm run build`          | Compile TypeScript to `dist/`                  |
-| `npm start`              | Run the compiled server (`dist/server.js`)     |
+| `npm run build`          | Type-check the project (`tsc --noEmit`)        |
+| `npm start`              | Run the server from source (`tsx`)             |
 | `npm run seed`           | Seed the admin user into the database          |
 | `npm test`               | Run the test suite once (Vitest)               |
 | `npm run test:watch`     | Run tests in watch mode                        |

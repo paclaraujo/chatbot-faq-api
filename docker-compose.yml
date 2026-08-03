@@ -1,24 +1,52 @@
 services:
-
   postgres:
-
     image: postgres:16
-
     container_name: faq-postgres
-
     restart: always
-
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: faq_database
-
     ports:
       - "5432:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      target: builder
+    container_name: faq-migrate
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/faq_database
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npx prisma migrate deploy
+
+  api:
+    build:
+      context: .
+      target: runtime
+    container_name: faq-api
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/faq_database
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
 volumes:
-
   postgres_data:

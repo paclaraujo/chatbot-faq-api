@@ -1,38 +1,21 @@
 import type { Request, Response } from "express";
 import { ChatRepository } from "../repositories/chat.repository";
 import { ChatService } from "../services/chat.service";
+import type { AskQuestionDTO } from "../dto/ask-question.dto";
 
 const repository = new ChatRepository();
 const service = new ChatService(repository);
 
 export class ChatController {
   static async ask(req: Request, res: Response) {
-    try {
-      const { question } = req.body;
+    const result = await service.ask(req.body as AskQuestionDTO);
 
-      if (!question || !question.trim()) {
-        throw new Error("Pergunta é obrigatória");
-      }
-
-      const result = await service.ask({ question });
-
-      return res.status(200).json(result);
-    } catch (error) {
-      return res.status(400).json({
-        message: (error as Error).message,
-      });
-    }
+    return res.status(200).json(result);
   }
 
-  static async history(_: Request, res: Response) {
-    try {
-      const history = await service.history();
+  static async history(_req: Request, res: Response) {
+    const history = await service.history();
 
-      return res.status(200).json(history);
-    } catch (error) {
-      return res.status(400).json({
-        message: (error as Error).message,
-      });
-    }
+    return res.status(200).json(history);
   }
 }
